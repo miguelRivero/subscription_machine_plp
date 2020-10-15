@@ -1,0 +1,10 @@
+
+.ProductListElement__color-shades-label {
+    color: #666666;
+}
+
+@media screen and (max-width: 767px) {
+    .ProductListElement__color-shades {
+        margin-top:0;
+    }
+}
