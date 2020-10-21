@@ -1,10 +1,11 @@
+const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: ["./src/translations.js", "./src/index.ts", "./src/styles/style.scss"],
   mode: "development",
   resolve: {
     extensions: [".ts", ".js", ".json"],
@@ -12,6 +13,13 @@ module.exports = {
   optimization: {
     minimizer: [new OptimizeCssAssetsPlugin()],
   },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    libraryTarget: "global",
+    publicPath: "https://localhost:8080/",
+  },
+  devtool: "source-map",
+  mode: "development",
   module: {
     rules: [
       {
@@ -19,15 +27,15 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
-      {
-        test: /\.css$/,
-        exclude: /styles\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /styles\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
-      },
+      // {
+      //   test: /\.css$/,
+      //   exclude: /styles\.css$/,
+      //   use: ["style-loader", "css-loader"],
+      // },
+      // {
+      //   test: /styles\.css$/,
+      //   use: [MiniCssExtractPlugin.loader, "css-loader"],
+      // },
       {
         test: /\.(s*)css$/,
         use: ["style-loader", "css-loader", "sass-loader"],
@@ -64,6 +72,6 @@ module.exports = {
       filename: "[name].css",
       ignoreOrder: false,
     }),
-    new CopyPlugin([{ from: "src/favicon.ico", to: "./favicon.ico" }]),
+    //new CopyPlugin([{ from: "src/favicon.ico", to: "./favicon.ico" }]),
   ],
 };

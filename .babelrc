@@ -1,3 +1,29 @@
 {
-    "presets": ["@babel/preset-env","minify"]
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "ie": "11"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ],
+    [
+      "transform-remove-console",
+      {
+        "exclude": [
+          "error",
+          "warn"
+        ]
+      }
+    ]
+  ]
 }
