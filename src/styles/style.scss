@@ -1,43 +1,43 @@
 @import "./fonts";
 
 .ProductListElement__costs {
-    text-align: left;
+  text-align: left;
 }
 
 .ProductListElement__price--machine {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 .ProductListElement__price--subscription {
-    span {
-        font-family: NespressoLucas !important;
-        font-weight: 400;
-        font-size: 0.875rem;
-        color: #666666;
-        letter-spacing: 1px;
-        line-height: 1.3125rem;
-        &:first-child {
-            display: block;
-        }
+  span {
+    font-family: inherit;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: #666666;
+    letter-spacing: 1px;
+    line-height: 1.3125rem;
+    &:first-child {
+      display: block;
     }
-    .ProductListElement__price--subscriptionPrice {
-        color: #8D1F3C;
-        font-size: 1rem;
-        font-weight: bold;
-        line-height: 1.5rem;
-        margin-right: 0.25rem;
-        font-family: NespressoLucas !important;
-        font-weight: 700;
-    }
+  }
+  .ProductListElement__price--subscriptionPrice {
+    color: #8d1f3c;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.5rem;
+    margin-right: 0.25rem;
+    font-family: inherit;
+    font-weight: 700;
+  }
 }
 @media screen and (max-width: 320px) {
-    .ProductListElement__price--subscription {
-        span {
-            font-size: 0.75rem;
-        }
+  .ProductListElement__price--subscription {
+    span {
+      font-size: 0.75rem;
     }
-    .ProductListElement__price {
-        line-height: 1.3125rem;
-    }
+  }
+  .ProductListElement__price {
+    line-height: 1.3125rem;
+  }
 }
 
 // @media screen and (max-width: 767px) {
@@ -46,15 +46,14 @@
 //     }
 // }
 
-@media screen and (min-width: 768px){
+@media screen and (min-width: 768px) {
+  .ProductListElement__price {
+    text-align: left;
+    padding-left: 0;
+  }
+  .ProductListElement__costs {
     .ProductListElement__price {
-        text-align: left;
-        padding-left: 0;
+      line-height: 1.125rem;
     }
-    .ProductListElement__costs {
-        .ProductListElement__price {
-            line-height: 1.125rem;
-        }
-
-    }
+  }
 }
