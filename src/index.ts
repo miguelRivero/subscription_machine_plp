@@ -58,11 +58,14 @@ const addSubscriptionInfo = async () => {
       const subscription = getProductSubscription(productSKU, subscriptions);
       if (subscription) {
         //Harcoded to 1 temporarily
-        let subscriptionprice = await getPriceFormatted(1);
-        // let subscriptionprice = await getPriceFormatted(
+        let priceSubscription = await getPriceFormatted(1);
+        let pricePeriodicFee = await getPriceFormatted(
+          subscription.periodicFee
+        );
+        // let priceSubscription = await getPriceFormatted(
         //   subscription.promotionalPrice
         // );
-        subscriptionprice = subscriptionprice.split(".")[0];
+        priceSubscription = priceSubscription.split(".")[0];
 
         //Function
         const copyText = (window as any).SubscriptionMachinePLP[getMarket()]
@@ -70,27 +73,37 @@ const addSubscriptionInfo = async () => {
 
         const container = document.createElement("div") as HTMLDivElement;
         container.classList.add("ProductListElement__price--subscription");
-        const orEl = document.createElement("span") as HTMLDivElement;
-        orEl.innerHTML = copyText.or;
-        const priceEl = document.createElement("span") as HTMLDivElement;
-        priceEl.innerHTML = subscriptionprice;
-        priceEl.classList.add("ProductListElement__price--subscriptionPrice");
-        const withEl = document.createElement("span") as HTMLDivElement;
-        withEl.innerHTML = copyText.afterPrice;
+        const var1 = `
+          <span>${copyText.or}</span>
+          <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
+          <span>+</span>
+          <span class="ProductListElement__price--subscriptionPrice">${pricePeriodicFee}</span>
+          <span>/month</span><br>
+          <span>${copyText.afterPrice}</span>
+        `;
+        const var2 = `
+          <span>${copyText.or}</span>
+          <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
+          <span>${copyText.afterPrice}</span>
+        `;
+        container.innerHTML = var2;
+        const badge = document.createElement("button") as HTMLButtonElement;
+        badge.innerHTML = `i`;
+        badge.classList.add("ProductListElement__price--infoIcon");
+        badge.addEventListener("click", popup, false);
+        container.append(badge);
 
-        container.append(orEl);
-        container.append(priceEl);
-        container.append(withEl);
-
-        //const subscriptionEl = createSubscriptionEl(subscriptionprice);
-
-        // costContainer.appendChild(subscriptionEl);
         costContainer.appendChild(container);
       }
     }
   }
 };
 
+function popup(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  console.log("pup");
+}
 function getLang() {
   if (!(window as any).config) {
     console.log("AB - window.config not found");
@@ -124,3 +137,4 @@ documentObserver.observe(document, {
   characterData: false,
   subtree: true,
 });
+console.log("asa");
