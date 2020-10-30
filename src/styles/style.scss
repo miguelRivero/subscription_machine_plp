@@ -1,4 +1,7 @@
 @import "./fonts";
+@import "./mixins";
+
+$red: #8d1f3c;
 
 .ProductListElement__costs {
   .ProductListElement__price {
@@ -25,7 +28,7 @@
   }
 
   .ProductListElement__price--subscriptionPrice {
-    color: #8d1f3c;
+    color: $red;
     font-size: 1rem;
     font-weight: bold;
     line-height: 1.5rem;
@@ -37,7 +40,7 @@
     cursor: pointer;
     height: 20px;
     width: 20px;
-    background-color: #8d1f3c;
+    background-color: $red;
     font-family: inherit;
     font-size: 14px;
     font-weight: bold;
@@ -51,6 +54,87 @@
     margin-left: 0.25rem;
   }
 }
+.subscriptionInfoModal__container {
+  padding: 2rem 17%;
+}
+.subscriptionInfoModal__price {
+  display: flex;
+  align-items: center;
+  img {
+    height: 80px;
+    width: 80px;
+  }
+}
+.subscriptionInfoModal__firstPrice,
+.subscriptionInfoModal__periodicPrice {
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  line-height: 1.5rem;
+  color: #000000;
+  font-weight: 300;
+  margin-left: 0.375rem;
+}
+.subscriptionInfoModal__firstPrice {
+  font-weight: bold;
+  color: $red;
+}
+.subscriptionInfoModal__details {
+  margin-top: 1rem;
+  li {
+    font-family: inherit;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    line-height: 1.3125rem;
+    position: relative;
+    padding-left: 24px;
+    @include before-checkmark(6px, $red);
+  }
+}
+.subscriptionInfoModal__minimum {
+  color: #666666;
+  font-family: inherit;
+  font-size: 0.875rem;
+  letter-spacing: 1px;
+  line-height: 1.3125rem;
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.subscriptionInfoModal__closeBtn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  border: none;
+  background: none;
+  padding: 0;
+  &:before {
+    content: "";
+    height: 16px;
+    border-left: 2px solid #666;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: -0.5rem;
+  }
+  &:after {
+    content: "";
+    height: 1rem;
+    border-left: 2px solid #666;
+    position: absolute;
+    transform: rotate(45deg);
+    top: -0.5rem;
+  }
+  &:hover {
+    &:before,
+    &:after {
+      border-left-color: black;
+    }
+  }
+}
+.popin-dialog-open .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
+  background: none !important;
+}
+
 @media screen and (max-width: 320px) {
   .ProductListElement__price--subscription {
     span {

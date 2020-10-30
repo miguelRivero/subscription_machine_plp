@@ -1,26 +1,20 @@
 import "./styles/style.scss";
 //import "/82844/shared_res/mos/free_html/int/Subscription_Machine_PLP/main.scss";
 import { getSubscriptionData, getPriceFormatted } from "./js/utils";
+import { getModalContent } from "./js/modal";
+// import $ from "jquery";
+declare var $: any;
+declare const window: any;
+// interface MyWindow extends Window {
+//   jQuery(): void;
+//   config(): void;
+//   ui(): void;
+// }
 
-// const createSubscriptionEl = (price) => {
-//   const copyText = (window as any).SubscriptionMachinePLP[getMarket()]
-//     .subscriptionPrice[getLang()];
-
-//   const container = document.createElement("div") as HTMLDivElement;
-//   container.classList.add("ProductListElement__price--subscription");
-//   const orEl = document.createElement("span") as HTMLDivElement;
-//   orEl.innerHTML = copyText.or;
-//   const priceEl = document.createElement("span") as HTMLDivElement;
-//   priceEl.innerHTML = price;
-//   priceEl.classList.add("ProductListElement__price--subscriptionPrice");
-//   const withEl = document.createElement("span") as HTMLDivElement;
-//   withEl.innerHTML = copyText.afterPrice;
-
-//   container.append(orEl);
-//   container.append(priceEl);
-//   container.append(withEl);
-//   return container;
-// };
+// $(function () {
+//   alert("Hello");
+// });
+let modal;
 
 const getSubscriptions = async (): Promise<object> => {
   const response = await getSubscriptionData();
@@ -66,10 +60,11 @@ const addSubscriptionInfo = async () => {
         //   subscription.promotionalPrice
         // );
         priceSubscription = priceSubscription.split(".")[0];
-
+        const lang = getLang();
+        const market = getMarket();
         //Function
-        const copyText = (window as any).SubscriptionMachinePLP[getMarket()]
-          .subscriptionPrice[getLang()];
+        const copyText = (window as any).SubscriptionMachinePLP[market]
+          .subscriptionPrice[lang];
 
         const container = document.createElement("div") as HTMLDivElement;
         container.classList.add("ProductListElement__price--subscription");
@@ -90,7 +85,21 @@ const addSubscriptionInfo = async () => {
         const badge = document.createElement("button") as HTMLButtonElement;
         badge.innerHTML = `i`;
         badge.classList.add("ProductListElement__price--infoIcon");
-        badge.addEventListener("click", popup, false);
+        badge.addEventListener(
+          "click",
+          function (evt) {
+            openModal(
+              evt,
+              market,
+              lang,
+              subscription.monthsDuration,
+              pricePeriodicFee,
+              priceSubscription,
+              productSKU
+            );
+          },
+          false
+        );
         container.append(badge);
 
         costContainer.appendChild(container);
@@ -99,11 +108,88 @@ const addSubscriptionInfo = async () => {
   }
 };
 
-function popup(event) {
-  event.preventDefault();
-  event.stopPropagation();
-  console.log("pup");
+function createModal() {
+  modal = document.createElement("div");
+  modal.classList.add("ab-modal-packaging");
+  const wrapper = document.getElementById("main");
+  wrapper!.appendChild(modal);
+
+  const w = window.innerWidth;
+  let popinWidth, popinHeight;
+  //768 for ipad
+  if (w <= 768) {
+    popinWidth = w;
+    $(modal).addClass("mobile");
+  } else {
+    popinWidth = 739;
+  }
+  popinHeight = "auto";
+
+  $(modal).dialog({
+    autoOpen: false,
+    modal: true,
+    position: {
+      my: "center center",
+      at: "center center",
+      of: window,
+    },
+    dialogClass: "packagingContainer ui-popin popin-dialog-open dark",
+    title: "",
+    buttons: [
+      {
+        text: "",
+        icon: "ui-icon-heart",
+        class: "subscriptionInfoModal__closeBtn",
+        click: function () {
+          $(this).dialog("close");
+        },
+      },
+    ],
+    width: popinWidth,
+    height: popinHeight,
+    resizable: false,
+    closeOnEscape: true,
+    draggable: false,
+    clickOutside: true,
+    show: {
+      effect: "fadeIn",
+      duration: 300,
+    },
+    hide: {
+      effect: "fadeOut",
+      duration: 300,
+    },
+    open: function (e) {
+      window
+        .$(".abp-close-dialog, .ui-widget-overlay")
+        .on("click", function (event) {
+          event.preventDefault();
+          window.$(e.target).dialog("close");
+        });
+      document.documentElement.classList.add("g_scrollLock");
+    },
+    close: function () {
+      window.$(".abp-close-dialog, .ui-widget-overlay").off("click");
+      document.documentElement.classList.remove("g_scrollLock");
+    },
+  });
 }
+
+function openModal(e, market, lang, duration, periodic, subscription, sku) {
+  e!.preventDefault();
+  e!.stopPropagation();
+
+  modal.innerHTML = getModalContent(
+    market,
+    lang,
+    duration,
+    periodic,
+    subscription,
+    sku
+  );
+  $(modal).dialog("open");
+}
+
 function getLang() {
   if (!(window as any).config) {
     console.log("AB - window.config not found");
@@ -123,18 +209,37 @@ function getMarket() {
   return (window as any).config.defaults.addressCountry;
 }
 
-//Check if .ProductList is rendered
-let documentObserver = new MutationObserver(function (mutations) {
-  if (document.contains(document.querySelector(".ProductList"))) {
-    addSubscriptionInfo();
-    documentObserver.disconnect();
+function defer(method) {
+  if (window.jQuery && window.jQuery.ui && window.config) {
+    method();
+  } else {
+    setTimeout(function () {
+      defer(method);
+    }, 50);
   }
+}
+
+defer(function () {
+  (async () => {
+    console.log("waiting");
+    //Check if .ProductList is rendered
+    let documentObserver = new MutationObserver(function (mutations) {
+      if (document.contains(document.querySelector(".ProductList"))) {
+        addSubscriptionInfo();
+        documentObserver.disconnect();
+      }
+    });
+
+    documentObserver.observe(document, {
+      attributes: false,
+      childList: true,
+      characterData: false,
+      subtree: true,
+    });
+    createModal();
+  })();
 });
 
-documentObserver.observe(document, {
-  attributes: false,
-  childList: true,
-  characterData: false,
-  subtree: true,
-});
-console.log("asa");
+function init() {
+  console.log("init");
+}

@@ -1,0 +1,21 @@
+@mixin before-checkmark($height, $color) {
+  &:before {
+    /*Add another block-level blank space*/
+    content: "";
+    display: block;
+
+    /*Make it a small rectangle so the border will create an L-shape*/
+    width: $height * 0.5;
+    height: $height;
+
+    /*Add a white border on the bottom and left, creating that 'L' */
+    border: solid $color;
+    border-width: 0 $height/3 $height/3 0;
+
+    /*Rotate the L 45 degrees to turn it into a checkmark*/
+    transform: rotate(45deg);
+    position: absolute;
+    left: 0;
+    top: $height;
+  }
+}
