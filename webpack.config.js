@@ -5,7 +5,12 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: ["./src/translations.js", "./src/index.ts", "./src/styles/style.scss"],
+  entry: [
+    "./src/translations.js",
+    "./src/blacklistSKU.js",
+    "./src/index.ts",
+    "./src/styles/style.scss",
+  ],
   mode: "development",
   resolve: {
     extensions: [".ts", ".js", ".json"],

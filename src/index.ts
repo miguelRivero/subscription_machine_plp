@@ -1,5 +1,4 @@
 import "./styles/style.scss";
-//import "/82844/shared_res/mos/free_html/int/Subscription_Machine_PLP/main.scss";
 import { getSubscriptionData, getPriceFormatted } from "./js/utils";
 import { getModalContent } from "./js/modal";
 // import $ from "jquery";
@@ -14,7 +13,8 @@ declare const window: any;
 // $(function () {
 //   alert("Hello");
 // });
-let modal;
+let modal,
+  currentVariant = "var2";
 
 const getSubscriptions = async (): Promise<object> => {
   const response = await getSubscriptionData();
@@ -43,22 +43,29 @@ const addSubscriptionInfo = async () => {
       priceEl = product.querySelector(".ProductListElement__price");
 
     if (priceEl) {
-      const costContainer = document.createElement("div") as HTMLDivElement;
+      product.classList.add("ProductListGroup--subscription");
+      const costContainer = document.createElement("div") as HTMLDivElement,
+        headlineEl = priceEl.parentNode!.querySelector(
+          ".ProductListElement__headline"
+        );
       costContainer.classList.add("ProductListElement__costs");
       priceEl.parentNode!.insertBefore(costContainer, priceEl.nextSibling!);
       costContainer.appendChild(priceEl);
+      headlineEl!.parentNode!.insertBefore(
+        costContainer,
+        headlineEl!.nextSibling!
+      );
 
-      //Check if machine has a subscription plan
+      //Check if machine has a subscription plan and is not blacklisted
       const subscription = getProductSubscription(productSKU, subscriptions);
-      if (subscription) {
+
+      if (window.skuBlacklisted.indexOf(productSKU) === -1 && subscription) {
         //Harcoded to 1 temporarily
         let priceSubscription = await getPriceFormatted(1);
         let pricePeriodicFee = await getPriceFormatted(
           subscription.periodicFee
         );
-        // let priceSubscription = await getPriceFormatted(
-        //   subscription.promotionalPrice
-        // );
+
         priceSubscription = priceSubscription.split(".")[0];
         const lang = getLang();
         const market = getMarket();
@@ -68,20 +75,22 @@ const addSubscriptionInfo = async () => {
 
         const container = document.createElement("div") as HTMLDivElement;
         container.classList.add("ProductListElement__price--subscription");
-        const var1 = `
-          <span>${copyText.or}</span>
-          <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
-          <span>+</span>
-          <span class="ProductListElement__price--subscriptionPrice">${pricePeriodicFee}</span>
-          <span>/month</span><br>
-          <span>${copyText.afterPrice}</span>
-        `;
-        const var2 = `
-          <span>${copyText.or}</span>
-          <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
-          <span>${copyText.afterPrice}</span>
-        `;
-        container.innerHTML = var2;
+        const variants = {
+          var1: `
+            <span>${copyText.or}</span>
+            <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
+            <span>+</span>
+            <span class="ProductListElement__price--subscriptionPrice">${pricePeriodicFee}</span>
+            <span>/month</span><br>
+            <span>${copyText.afterPrice}</span>
+          `,
+          var2: `
+            <span>${copyText.or}</span>
+            <span class="ProductListElement__price--subscriptionPrice">${priceSubscription}</span>
+            <span>${copyText.afterPrice}</span>
+          `,
+        };
+        container.innerHTML = variants[currentVariant];
         const badge = document.createElement("button") as HTMLButtonElement;
         badge.innerHTML = `i`;
         badge.classList.add("ProductListElement__price--infoIcon");
@@ -138,8 +147,7 @@ function createModal() {
     buttons: [
       {
         text: "",
-        icon: "ui-icon-heart",
-        class: "subscriptionInfoModal__closeBtn",
+        id: "subscriptionInfoModal__closeBtn",
         click: function () {
           $(this).dialog("close");
         },
@@ -166,6 +174,7 @@ function createModal() {
           event.preventDefault();
           window.$(e.target).dialog("close");
         });
+      $(this).parent().focus(); //hack to remove focus on close button
       document.documentElement.classList.add("g_scrollLock");
     },
     close: function () {
@@ -192,15 +201,15 @@ function openModal(e, market, lang, duration, periodic, subscription, sku) {
 
 function getLang() {
   if (!(window as any).config) {
-    console.log("AB - window.config not found");
+    //console.log("AB - window.config not found");
   }
   const ns = (window as any).config.padl.namespace;
   if (!ns) {
-    console.log("AB - padl.namespace not found");
+    //console.log("AB - padl.namespace not found");
   }
   const dataLayer = (window as any)[ns].dataLayer;
   if (!dataLayer) {
-    console.log("AB - window[ns].dataLayer not found");
+    //console.log("AB - window[ns].dataLayer not found");
   }
   return (window as any)[ns].dataLayer.page.page.pageInfo.language;
 }
@@ -221,7 +230,7 @@ function defer(method) {
 
 defer(function () {
   (async () => {
-    console.log("waiting");
+    //console.log("waiting");
     //Check if .ProductList is rendered
     let documentObserver = new MutationObserver(function (mutations) {
       if (document.contains(document.querySelector(".ProductList"))) {
@@ -239,7 +248,3 @@ defer(function () {
     createModal();
   })();
 });
-
-function init() {
-  console.log("init");
-}

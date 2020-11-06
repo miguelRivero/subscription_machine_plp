@@ -3,6 +3,41 @@
 
 $red: #8d1f3c;
 
+//Restyle existing layout
+.ProductListGroup--subscription {
+  .ProductListElement__content {
+    display: flex;
+  }
+  .ProductListElement__content,
+  .ProductListElement__name {
+    width: calc(100% - 1rem);
+    margin-left: 1rem;
+  }
+  .ProductListElement__information {
+    width: calc(100% - 255px);
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .ProductListElement__headline {
+    flex: 1;
+    padding-right: 12%;
+  }
+  .ProductListElement__color-shades {
+    flex: 0 0 100%;
+    margin-top: 0.5rem;
+  }
+  .ProductListElement__details-link {
+    max-height: 40px;
+  }
+  .subBannerPLP {
+    display: none;
+  }
+}
+
+//Style cost element
+.ProductListElement__costs {
+  flex: 0 0 35%;
+}
 .ProductListElement__costs {
   .ProductListElement__price {
     font-size: 16px;
@@ -50,13 +85,31 @@ $red: #8d1f3c;
     display: inline-block;
     border-radius: 100%;
     border: none;
-    padding-left: 0.375rem;
+    padding-left: 0.4375rem;
     margin-left: 0.25rem;
   }
 }
+
+// SUBSCRIPTIOM MODAL
+.g_scrollLock {
+  overflow: hidden;
+}
+
 .subscriptionInfoModal__container {
   padding: 2rem 17%;
 }
+.subscriptionInfoModal__title {
+  text-align: center;
+}
+
+.subscriptionHero__logo {
+  width: 182px;
+}
+
+.subscriptionInfoModal__content {
+  margin-top: 1.5rem;
+}
+
 .subscriptionInfoModal__price {
   display: flex;
   align-items: center;
@@ -73,11 +126,11 @@ $red: #8d1f3c;
   line-height: 1.5rem;
   color: #000000;
   font-weight: 300;
-  margin-left: 0.375rem;
 }
 .subscriptionInfoModal__firstPrice {
   font-weight: bold;
   color: $red;
+  margin-left: 0.375rem;
 }
 .subscriptionInfoModal__details {
   margin-top: 1rem;
@@ -101,64 +154,133 @@ $red: #8d1f3c;
   padding-left: 1.5rem;
 }
 
-.subscriptionInfoModal__closeBtn {
+#subscriptionInfoModal__closeBtn {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1rem;
+  right: 1rem;
   border: none;
   background: none;
   padding: 0;
-  &:before {
-    content: "";
-    height: 16px;
-    border-left: 2px solid #666;
-    position: absolute;
-    transform: rotate(-45deg);
-    top: -0.5rem;
-  }
+  height: 47px;
+  width: 47px;
+  border-radius: 100%;
+  background-color: #f6f4f2;
+  border: 1px solid #f6f4f2;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:before,
   &:after {
     content: "";
-    height: 1rem;
-    border-left: 2px solid #666;
+    height: 1.25rem;
+    border-left: 2px solid #919191;
     position: absolute;
     transform: rotate(45deg);
-    top: -0.5rem;
+    top: 0.8125rem;
+    left: 1.375rem;
+  }
+  &:before {
+    transform: rotate(-45deg);
+  }
+  &:after {
+    transform: rotate(45deg);
   }
   &:hover {
+    box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.4);
     &:before,
     &:after {
-      border-left-color: black;
+      transition: border-left-color 0.3s;
+      border-left-color: #666666;
     }
   }
+  &:focus {
+    border: 1px solid #666666;
+  }
 }
-.popin-dialog-open .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
-  background: none !important;
+
+//Jquery modal customization
+.ui-popin {
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.packagingContainer .ui-dialog-titlebar {
+  display: none;
 }
 
 @media screen and (max-width: 320px) {
+  .ProductListElement__machine .ProductListElement__price {
+    line-height: 1.3125rem;
+    font-size: 0.875rem;
+  }
   .ProductListElement__price--subscription {
     span {
       font-size: 0.75rem;
+      letter-spacing: normal;
     }
-  }
-  .ProductListElement__price {
-    line-height: 1.3125rem;
+    .ProductListElement__price--subscriptionPrice {
+      font-size: 0.875rem;
+    }
+    .ProductListElement__price--infoIcon {
+      margin-left: 0;
+    }
   }
 }
 
-// @media screen and (max-width: 767px) {
-//     .ProductListElement__color-shades {
-//         margin-top:0;
-//     }
-// }
-
-@media screen and (min-width: 768px) {
-  .ProductListElement__price {
-    text-align: left;
-    padding-left: 0;
+@media screen and (max-width: 995px) and (min-width: 768px) {
+  .ProductListGroup--subscription .ProductListElement__headline {
+    display: none;
   }
   .ProductListElement__costs {
+    flex: auto;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .ProductListElement__details-link--machine {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    top: unset;
+  }
+  .ProductListGroup--subscription {
+    margin: 10px 0 !important;
+    .ProductListElement__machine {
+      height: 240px !important;
+      // height: auto;
+    }
+    .ProductListElement__information {
+      width: 100%;
+    }
+    // .ProductListElement__content {
+    //   flex-direction: column;
+    // }
+    .ProductListElement__details-link {
+      //   position: relative;
+      margin: 16px 0;
+      //   max-width: 255px;
+      //   transform: translateX(calc(-50% + 61px));
+      //   margin-left: calc(-50% - 45px);
+      //   width: 100vw;
+    }
+  }
+  .ProductListElement__costs {
+    flex: 1;
+  }
+  .subscriptionInfoModal__container {
+    padding: 2rem 1.5rem;
+  }
+  #subscriptionInfoModal__closeBtn {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .ProductListGroup--subscription {
     .ProductListElement__price {
+      text-align: left;
+      padding-left: 0;
       line-height: 1.125rem;
     }
   }

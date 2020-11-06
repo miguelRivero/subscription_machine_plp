@@ -4,12 +4,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
 //const CopyPlugin = require("copy-webpack-plugin");
 require("regenerator-runtime/runtime");
 
 module.exports = {
   entry: {
     Translations: ["./src/translations.js"],
+    BlacklistSKU: ["./src/blacklistSKU.js"],
     SubscriptionMachinePLPCode: ["./src/index.ts", "./src/styles/style.scss"],
   },
   output: {
@@ -22,7 +24,10 @@ module.exports = {
     extensions: [".ts", ".js", ".json"],
   },
   optimization: {
-    minimizer: [new OptimizeCssAssetsPlugin()],
+    minimizer: [
+      // Minify css files:
+      new OptimizeCssAssetsPlugin(),
+    ],
     splitChunks: { chunks: "async" },
   },
   // output: {
@@ -32,7 +37,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: "ts-loader",
+        use: { loader: "ts-loader", options: { silent: true } },
         exclude: /node_modules/,
       },
       {
@@ -40,27 +45,32 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          // options: {
-          //   presets: [
-          //     [
-          //       "@babel/env",
-          //       {
-          //         targets: {
-          //           ie: "11",
-          //         },
-          //       },
-          //     ],
-          //   ],
-          //   plugins: [
-          //     [
-          //       "@babel/plugin-transform-runtime",
-          //       {
-          //         regenerator: true,
-          //       },
-          //     ],
-          //     ["transform-remove-console", { exclude: ["error", "warn"] }],
-          //   ],
-          // },
+          options: {
+            presets: [
+              [
+                "@babel/env",
+                {
+                  targets: {
+                    ie: "11",
+                  },
+                },
+              ],
+            ],
+            plugins: [
+              [
+                "@babel/plugin-transform-runtime",
+                {
+                  regenerator: true,
+                },
+              ],
+              [
+                "transform-remove-console",
+                {
+                  exclude: ["error", "warn"],
+                },
+              ],
+            ],
+          },
         },
       },
       // {

@@ -1,0 +1,12 @@
+window.skuBlacklisted = [
+  "C30-ME-BK-NE1",
+  "EN650.BK",
+  "EN650.BK",
+  "EN650.WH",
+  "BNE800BSSUK",
+  "SNE800SST",
+  "SNE800BTR",
+  "SNE800DBL2GUK1",
+  "SNE800SHY",
+  "SNE900BSS4GUK1",
+];

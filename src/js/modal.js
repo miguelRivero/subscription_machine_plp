@@ -6,12 +6,16 @@ export function getModalContent(
   subscription,
   sku
 ) {
-  const imagesGitStorage =
-      "https://raw.githubusercontent.com/miguelRivero/machine-plp/master/public/images/",
-    modalContent = window.SubscriptionMachinePLP[market].modalContent;
+  const imagePath =
+    "https://www.nespresso.com/shared_res/agility/ABtests/subscription/images/subscription_logo_black.svg";
+  const modalContent = window.SubscriptionMachinePLP[market].modalContent;
   const imageEl = document.querySelector(
     "[data-product-item-id='" + sku + "'] .ProductListElement__image img"
-  ).outerHTML;
+  )
+    ? document.querySelector(
+        "[data-product-item-id='" + sku + "'] .ProductListElement__image img"
+      ).outerHTML
+    : "<div></div>";
   return `
 <div id="subscriptionInfoModal" aria-hidden="true">
   <div role="dialog" aria-modal="true" aria-labelledby="subscriptionInfoModal__title" class="subscriptionInfoModal__container">
@@ -21,7 +25,7 @@ export function getModalContent(
       <img
       class="subscriptionHero__logo"
       aria-hidden="true"
-      src="${imagesGitStorage}/logo_subscription.svg"
+      src="${imagePath}"
       alt="Subscription by Nespresso" />
     </header>
 
